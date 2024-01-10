@@ -7,7 +7,7 @@ class OccupancyGrid:
     """
 
     def __init__(self, size):
-        self.grid = np.full((size, size), 0)
+        self.grid = np.full((size, size), 0, dtype=np.int64)
 
     """
     mark_cell: marks the cell as occupied
@@ -15,10 +15,7 @@ class OccupancyGrid:
 
     def mark_cell(self, x, y):
         if not self._valid_cell(x, y):
-            print("not valid")
             return
-        print("marking cell ", x, y)
-        print(self.grid)
         self.grid[x][y] = 1
         return
 
