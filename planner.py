@@ -70,14 +70,13 @@ class Planner:
         new_position = current_position - step_size * gradient
         return new_position
 
-    def navigate(self, current_position, goal_position, att_strength, rep_strength,
-                 safe_radius, step_size, grid_size):
-        gradient = self.calculate_gradient(current_position, goal_position, att_strength, rep_strength,
-                                           safe_radius)
-        new_position = current_position - step_size * gradient
+    def navigate(self, current_position, goal_position, config):
+        gradient = self.calculate_gradient(current_position, goal_position, config.att_strength, config.rep_strength,
+                                           config.safe_radius)
+        new_position = current_position - config.step_size * gradient
 
         # Ensure the new position stays within the grid boundaries
-        new_position = np.clip(new_position, [0, 0], [grid_size[0], grid_size[1]])
+        new_position = np.clip(new_position, [0, 0], [config.grid_size[0], config.grid_size[1]])
 
         return new_position
 
@@ -94,59 +93,3 @@ class Planner:
                     current_position, goal_position, obstacles, att_strength, rep_strength, safe_radius)
 
         ax.plot_surface(X, Y, Z, cmap='viridis', alpha=0.8)
-
-
-def main():
-    att_strength = 1.0
-    rep_strength = 10.0
-    safe_radius = 2.0
-    step_size = 0.1
-    max_iterations = 100
-
-    grid_size = [6, 6]
-    occupancy_grid = OccupancyGrid(size=grid_size[0])
-    planner = Planner(occupancy_grid)
-
-    scenarios = Scenarios()
-    for j, scenario in enumerate(scenarios.scenarios):
-        print("Scenario: ", j)
-        scenario_gen = ScenarioGenerator(scenario)
-
-        goal_position = scenario_gen.goal_position
-        obstacle_positions = scenario_gen.obstacle_positions
-        start_position = scenario_gen.start_position
-        current_position = start_position
-
-        planner.mark_grid_with_obstacles(obstacle_positions)
-
-        print(planner.occupancy_grid.grid)
-        print(planner.occupancy_grid.grid.shape)
-        print(planner.occupancy_grid.grid.shape[0])
-        print(planner.occupancy_grid.grid.shape[1])
-
-        for i in range(max_iterations):
-            plt.scatter(current_position[0], current_position[1], color='blue')
-            plt.scatter(goal_position[0], goal_position[1], color='green')
-            for obstacle in obstacle_positions:
-                plt.scatter(obstacle[0], obstacle[1], color='red')
-
-            if np.linalg.norm(current_position - goal_position) < 0.1:
-                print("Reached the goal!")
-                break
-
-            current_position = planner.navigate(current_position,
-                                                goal_position,
-                                                att_strength,
-                                                rep_strength,
-                                                safe_radius,
-                                                step_size,
-                                                grid_size)
-
-        plt.xlabel('X-axis')
-        plt.ylabel('Y-axis')
-        plt.title('Potential Field Method')
-        plt.show()
-
-
-if __name__ == "__main__":
-    main()

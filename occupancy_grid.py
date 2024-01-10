@@ -19,7 +19,6 @@ class OccupancyGrid:
         self.grid[x][y] = 1
         return
 
-
     """
     unmark_cell: marks the cell as unoccupied
     """
@@ -32,7 +31,7 @@ class OccupancyGrid:
     def is_occupied(self, x, y):
         if not self._valid_cell(x, y):
             return False
-        a =  self.grid[x][y] == 1
+        a = self.grid[x][y] == 1
         return a
 
     """
