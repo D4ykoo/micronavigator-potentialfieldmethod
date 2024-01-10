@@ -79,17 +79,3 @@ class Planner:
         new_position = np.clip(new_position, [0, 0], [config.grid_size[0], config.grid_size[1]])
 
         return new_position
-
-    def plot_potential_field(self, ax, att_strength, rep_strength, safe_radius, obstacles, grid_size, goal_position):
-        x_range = np.linspace(0, grid_size[0], 100)
-        y_range = np.linspace(0, grid_size[1], 100)
-        X, Y = np.meshgrid(x_range, y_range)
-        Z = np.zeros_like(X)
-
-        for i in range(X.shape[0]):
-            for j in range(X.shape[1]):
-                current_position = np.array([X[i, j], Y[i, j]])
-                Z[i, j] = self.calculate_total_potential(
-                    current_position, goal_position, obstacles, att_strength, rep_strength, safe_radius)
-
-        ax.plot_surface(X, Y, Z, cmap='viridis', alpha=0.8)

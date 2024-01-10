@@ -2,23 +2,26 @@ import numpy as np
 from matplotlib import pyplot as plt
 
 from config import Configurator
+from evaluator import PathEvaluator
 from occupancy_grid import OccupancyGrid
 from planner import Planner
+from plotter import Plotter
 from scenarios import Scenarios, ScenarioGenerator
 
 
 def main():
-    config = Configurator()
-    att_strength = 1.0
-    rep_strength = 10.0
-    safe_radius = 2.0
-    step_size = 0.1
-    max_iterations = 100
+    """
+    Main function of the micronavigator using the potential field method.
+    Takes care of the navigation, evaluation and plotting, by containing instances
+    of the Planner, Plotter, OccupancyGrid and ScenarioGenerator.
 
+    :return: Plots and prints results of the evaluation
+    """
+    config = Configurator()
     grid_size = [6, 6]
     occupancy_grid = OccupancyGrid(size=grid_size[0])
     planner = Planner(occupancy_grid)
-
+    plotter = Plotter(planner)
     scenarios = Scenarios()
     for j, scenario in enumerate(scenarios.scenarios):
         print("Scenario: ", j)
@@ -31,16 +34,32 @@ def main():
 
         planner.mark_grid_with_obstacles(obstacle_positions)
 
-        print(planner.occupancy_grid.grid)
-        print(planner.occupancy_grid.grid.shape)
-        print(planner.occupancy_grid.grid.shape[0])
-        print(planner.occupancy_grid.grid.shape[1])
 
-        for i in range(max_iterations):
-            plt.scatter(current_position[0], current_position[1], color='blue')
-            plt.scatter(goal_position[0], goal_position[1], color='green')
+        fig = plt.figure()
+        ax = fig.add_subplot(111, projection='3d')
+        ax.set_xlabel('X-axis')
+        ax.set_ylabel('Y-axis')
+        ax.set_zlabel('Potential Field')
+        ax.set_title('3D Potential Field Visualization')
+
+        path_fig = plt.figure()
+        path_ax = path_fig.add_subplot(111)
+        path_ax.set_xlabel('X-axis')
+        path_ax.set_ylabel('Y-axis')
+        path_ax.set_title('2D Scatter Plot')
+
+        legend_entries = {}
+
+
+        evaluator = PathEvaluator(planner.occupancy_grid, config.step_size)
+        planned_path = [current_position]
+
+        for i in range(config.max_iterations):
+            # Plotting in the 2D scatter plot
+            path_ax.scatter(current_position[0], current_position[1], color='blue', label='Current Position')
+            path_ax.scatter(goal_position[0], goal_position[1], color='green', label='Goal Position')
             for obstacle in obstacle_positions:
-                plt.scatter(obstacle[0], obstacle[1], color='red')
+                path_ax.scatter(obstacle[0], obstacle[1], color='red', label='Obstacle')
 
             if np.linalg.norm(current_position - goal_position) < 0.1:
                 print("Reached the goal!")
@@ -50,10 +69,30 @@ def main():
                                                 goal_position,
                                                 config)
 
-        plt.xlabel('X-axis')
-        plt.ylabel('Y-axis')
-        plt.title('Potential Field Method')
+            planned_path.append(current_position)
+
+        plotter.plot_potential_field(ax, current_position, goal_position, config)  # Show the 2D scatter plot
+
+        # Evaluate the planned path
+        evaluation_result = evaluator.evaluate_path(planned_path)
+
+        # Print the results
+        print("Occupancy grid: \n", planner.occupancy_grid.grid)
+        print("Path Length:", evaluation_result['path_length'])
+        print("Travel Time:", evaluation_result['travel_time'])
+        print("Number of Obstacles on Path:", evaluation_result['num_obstacles'])
+
+        for color, label in [('blue', 'Current Position'), ('green', 'Goal Position'), ('red', 'Obstacle')]:
+            if label not in legend_entries:
+                legend_entries[label] = plt.Line2D([0], [0], marker='o', color=color, label=label, linestyle='None')
+
+        # Add legends outside of the loop
+        legend = list(legend_entries.values())
+        path_ax.legend(handles=legend)
+        ax.legend()
         plt.show()
+
+
 
 
 if __name__ == "__main__":
