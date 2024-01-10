@@ -6,6 +6,7 @@ from evaluator import PathEvaluator
 from occupancy_grid import OccupancyGrid
 from planner import Planner
 from plotter import Plotter
+from robot import Robot
 from scenarios import Scenarios, ScenarioGenerator
 
 
@@ -19,8 +20,11 @@ def main():
     """
     config = Configurator()
     grid_size = [6, 6]
+
     occupancy_grid = OccupancyGrid(size=grid_size[0])
-    planner = Planner(occupancy_grid)
+    og_occupancy_grid = OccupancyGrid(size=grid_size[0])
+
+    planner = Planner(occupancy_grid, og_occupancy_grid, [0.1, 0.1])
     plotter = Plotter(planner)
     scenarios = Scenarios()
     for j, scenario in enumerate(scenarios.scenarios):
@@ -31,9 +35,9 @@ def main():
         obstacle_positions = scenario_gen.obstacle_positions
         start_position = scenario_gen.start_position
         current_position = start_position
+        roboter = Robot(0.1, 0.1, start_position)
 
         planner.mark_grid_with_obstacles(obstacle_positions)
-
 
         fig = plt.figure()
         ax = fig.add_subplot(111, projection='3d')
@@ -50,7 +54,6 @@ def main():
 
         legend_entries = {}
 
-
         evaluator = PathEvaluator(planner.occupancy_grid, config.step_size)
         planned_path = [current_position]
 
@@ -65,9 +68,11 @@ def main():
                 print("Reached the goal!")
                 break
 
-            current_position = planner.navigate(current_position,
+            current_position = planner.navigate(roboter.position,
                                                 goal_position,
                                                 config)
+            roboter_position = current_position
+            roboter.set_position(roboter_position)
 
             planned_path.append(current_position)
 
@@ -91,8 +96,6 @@ def main():
         path_ax.legend(handles=legend)
         ax.legend()
         plt.show()
-
-
 
 
 if __name__ == "__main__":

@@ -14,7 +14,7 @@ class OccupancyGrid:
     """
 
     def mark_cell(self, x, y):
-        if not self._valid_cell(x, y):
+        if not self.valid_cell(x, y):
             return
         self.grid[x][y] = 1
         return
@@ -24,12 +24,12 @@ class OccupancyGrid:
     """
 
     def unmark_cell(self, x, y):
-        if not self._valid_cell(x, y):
+        if not self.valid_cell(x, y):
             return
         return self.grid[x][y] == 0
 
     def is_occupied(self, x, y):
-        if not self._valid_cell(x, y):
+        if not self.valid_cell(x, y):
             return False
         a = self.grid[x][y] == 1
         return a
@@ -38,5 +38,5 @@ class OccupancyGrid:
     valid_cell: checks if the given coordinate is in the grid
     """
 
-    def _valid_cell(self, x, y):
+    def valid_cell(self, x, y):
         return 0 <= x < self.grid.shape[0] and 0 <= y < self.grid.shape[1]
