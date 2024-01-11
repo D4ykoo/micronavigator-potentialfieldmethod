@@ -12,15 +12,27 @@ scenario2 = {
     'obstacles': [(0, 1), (1, 1), (2, 2), (3, 3)]
 }
 
-scenarios = [scenario1, scenario2]
+scenario3 = {
+    'start': (0, 4),
+    'goal': (4, 3),
+    'obstacles': [(0, 1), (1, 1), (2, 2), (3, 3), (3, 4)]
+}
+
+scenarios = [scenario1, scenario2, scenario3]
 
 
-class Scenarios():
+class Scenarios:
+    """
+    Scenarios class to store a list of scenarios that can be accessed from another class.
+    """
     def __init__(self):
         self.scenarios = scenarios
 
 
 class ScenarioGenerator:
+    """
+    Scenario generator to generate scenario properties based on a scenario.
+    """
     def __init__(self, scenario):
         self.scenario = scenario
 

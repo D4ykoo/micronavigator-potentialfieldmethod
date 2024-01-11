@@ -12,7 +12,7 @@ from scenarios import Scenarios, ScenarioGenerator
 
 def main():
     """
-    Main function of the micronavigator using the potential field method.
+    Main function of the micro navigator using the potential field method.
     Takes care of the navigation, evaluation and plotting, by containing instances
     of the Planner, Plotter, OccupancyGrid and ScenarioGenerator.
 
@@ -81,7 +81,8 @@ def main():
         # Evaluate the planned path
         evaluation_result = evaluator.evaluate_path(planned_path)
 
-        # Print the results
+        # gradient_map = planner.visualize_gradient(goal_position, config.att_strength, config.rep_strength,
+        # config.safe_radius) Print the results
         print("Occupancy grid: \n", planner.occupancy_grid.grid)
         print("Path Length:", evaluation_result['path_length'])
         print("Travel Time:", evaluation_result['travel_time'])
@@ -91,10 +92,12 @@ def main():
             if label not in legend_entries:
                 legend_entries[label] = plt.Line2D([0], [0], marker='o', color=color, label=label, linestyle='None')
 
-        # Add legends outside of the loop
         legend = list(legend_entries.values())
         path_ax.legend(handles=legend)
         ax.legend()
+
+        # plt.imshow(gradient_map, cmap='viridis', origin='lower')
+        # plt.colorbar()
         plt.show()
 
 

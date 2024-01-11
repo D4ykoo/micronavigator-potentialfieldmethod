@@ -4,12 +4,19 @@ from mpl_toolkits.mplot3d import Axes3D
 
 
 class Plotter:
+    """
+    Class for plotting the 3D potential field
+    """
     def __init__(self, planner):
         self.fig = plt.figure()
         self.planner = planner
         self.ax = self.fig.add_subplot(111, projection='3d')
 
     def plot_potential_field(self, ax, current_position, goal_position, config):
+        """
+        Plots the potential field as a surface plot. It takes the current position,
+        goal position, and a configuration object as input.
+        """
         x_range = np.linspace(0, config.grid_size[0], 100)
         y_range = np.linspace(0, config.grid_size[1], 100)
         X, Y = np.meshgrid(x_range, y_range)
@@ -30,7 +37,3 @@ class Plotter:
                                                           config.rep_strength, config.safe_radius),
                    color='green', marker='o', label='Goal Position')
         self.ax.plot_surface(X, Y, Z, cmap='viridis', alpha=0.8)
-
-    def show_plot(self):
-
-        plt.show()

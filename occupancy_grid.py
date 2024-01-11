@@ -9,21 +9,21 @@ class OccupancyGrid:
     def __init__(self, size):
         self.grid = np.full((size, size), 0, dtype=np.int64)
 
-    """
-    mark_cell: marks the cell as occupied
-    """
-
     def mark_cell(self, x, y):
+        """
+        Marks the cell as occupied
+        """
         if not self.valid_cell(x, y):
             return
         self.grid[x][y] = 1
         return
 
-    """
-    unmark_cell: marks the cell as unoccupied
-    """
-
     def unmark_cell(self, x, y):
+        """
+        Marks the cell as unoccupied
+        :param x: x position of the cell
+        :param y: y position of the cell
+        """
         if not self.valid_cell(x, y):
             return
         return self.grid[x][y] == 0
@@ -39,4 +39,10 @@ class OccupancyGrid:
     """
 
     def valid_cell(self, x, y):
+        """
+        Checks if the given coordinate is in the grid
+        :param x: x position of the cell
+        :param y: y position of the cell
+        :return: True or False
+        """
         return 0 <= x < self.grid.shape[0] and 0 <= y < self.grid.shape[1]
