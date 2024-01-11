@@ -51,8 +51,4 @@ _________
 
 © 2024 [@D4ykoo](https://github.com/D4ykoo). All rights reserved.
 
-This project is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html).
-
-
-
-
+This project is licensed under the [GPLv3](https://www.gnu.org/licenses/gpl-3.0.en.html). For more details, see the [LICENSE](LICENSE) file.
