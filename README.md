@@ -1,7 +1,7 @@
 # Potential Fields Path Planning Algorithm
 This repository provides a planning system using the potential field method. Made for CASE-M2 IR.
 
-![](/home/dario/thi/micronavigator-potentialfieldmethod/ressources/local_minima_problem_scenario3_example.png)  
+![](./ressources/local_minima_problem_scenario3_example.png)  
 Fig 1: Showing a local minium in a bade case scenario
 ## Introduction
 
