@@ -36,8 +36,8 @@ def main():
         [0, 0, 1, 0, 0, 'x']
     ]
 
-    scenario1 = parse_grid(input_grid)
-    print(scenario1)
+    scenario = parse_grid(input_grid)
+    print(scenario)
 
 if __name__ == '__main__':
     main()
