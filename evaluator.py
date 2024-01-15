@@ -47,6 +47,8 @@ class PathEvaluator:
         :param path:
         :return:
         """
+        print(len(path))
+        print(self.step_size)
         return len(path) * self.step_size
 
     def count_obstacles_on_path(self, path):
@@ -60,4 +62,5 @@ class PathEvaluator:
         for position in path:
             if self.occupancy_grid.is_occupied(int(position[0]), int(position[1])):
                 num_obstacles += 1
+                print(int(position[0]), int(position[1]))
         return num_obstacles

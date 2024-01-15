@@ -1,5 +1,6 @@
 import numpy as np
 
+
 def repulsive_potential(current_position, obstacle_position, strength, safe_radius, robot_size):
     distance = np.linalg.norm(current_position - obstacle_position)
 
@@ -100,24 +101,6 @@ class Planner:
             gradient[i] = (potential_plus - potential_minus) / (2 * delta)
 
         return gradient
-
-    def move_towards_goal(self, current_position, goal_position, att_strength, rep_strength, safe_radius,
-                          step_size):
-        """
-         Moves towards the goal by updating the current position based on the gradient and step size
-
-        :return: the new position of the robot
-        """
-        gradient = self.calculate_gradient(current_position, goal_position, att_strength, rep_strength,
-                                           safe_radius)
-        learning_rate = 0.1
-
-        # Normalize the gradient to ensure it has a consistent scale
-        normalized_gradient = gradient / np.linalg.norm(gradient)
-
-        new_position = current_position - normalized_gradient * learning_rate
-
-        return new_position
 
     def navigate(self, current_position, goal_position, config):
         """
